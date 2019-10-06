@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "Home Temperature";
+}
+    <div id="app">
+
+       
+        <h1 class="title">My Eco Window App</h1>
+    
+
+        @*<div class="text-center">
+            <form>
+                Desired temperature in deg F:<br>
+                <input type="number" value="65" name="desiredTemp" id="desiredTemp" />
+                <input type="button" value="Submit" onclick="submit" />
+            </form>
+        </div>*@
+        <h2>Outside house: </h2>
+    <div id="weather">
+        <p id="description"></p>
+        <h1 id="temp"></h1>
+        <p id="location"></p>
+        <p style="display:inline-block">Humidity:</p>
+        <p style="display:inline-block" id="humidity"></p>
+        <p style="display:inline-block">%</p>
+    </div>
+
+        <h2>Inside house:  </h2>
+        <h1>@ViewData.Model.TempVal&#8457;</h1>
+        <p>Humidity: @ViewData.Model.HumidityVal%</p>
+
+        <p>The Data: @ViewData.Model.TheData</p>
+
+        
+
+
+
+
+
+
+
+        @*<div class="text-center">
+            @{
+                <p>Status Reported: @ViewData.Model.StatusReported </p>
+                <p>Status Desired:  @ViewData.Model.StatusDesired </p>
+            }
+        </div>
+
+        <div class="text-center">
+            <input type="button" value="On" onclick="location.href='@Url.Action("TurnOvenOn", "Home")'" />
+            <input type="button" value="Off" onclick="location.href='@Url.Action("TurnOvenOff", "Home")'" />
+            <p>Current temp: <p id="theTempValId"> @ViewData.Model.TempVal</p>deg. F</p>
+        </div>*@
+
+    <div class="buttonDiv">
+        <button id="myButton" onclick="buttonTextChangeFunc()">Open Window</button>
+    </div>
+
+
+
+
+
+    </div>
+
+<script>
+
+    //var desiredTemp = document.getElementById("desiredTemp").value;
+    //console.log(desiredTemp);
+
+    function weatherBalloon( cityID ) {
+        var key = 'c24b1e69b12182932011de7f1b2d7c83';
+        fetch('https://api.openweathermap.org/data/2.5/weather?id=' + cityID+ '&appid=' + key)  
+        .then(function(resp) { return resp.json() }) // Convert data to json
+            .then(function (data) {
+                drawWeather(data);
+                console.log(data);
+    })
+    .catch(function() {
+    // catch any errors
+  });
+}
+
+    window.onload = function() {
+        weatherBalloon( 4925037 );
+    }
+
+    function drawWeather( d ) {
+	var celcius = Math.round(parseFloat(d.main.temp)-273.15);
+	var fahrenheit = Math.round(((parseFloat(d.main.temp)-273.15)*1.8)+32); 
+
+	document.getElementById('description').innerHTML = d.weather[0].description;
+    document.getElementById('temp').innerHTML = fahrenheit + '&#8457;';
+    document.getElementById('humidity').innerHTML = d.main.humidity;
+	document.getElementById('location').innerHTML = d.name;
+
+    }
+
+
+    //function buttonTextChangeFunc() {
+    //    var myButtonInnerHTML = document.getElementById('myButton').innerHTML;
+    //    var open = "Open Window";
+    //    var close = "Close Window";
+
+    //    if (myButtonInnerHTML === open) {
+    //        return myButtonInnerHTML === close;
+    //    }
+    //    if (myButtonInnerHTML === close) {
+    //        return myButtonInnerHTML === open;
+    //    } else {
+    //        console.log('not working');
+    //    }
+         
+    //}
+
+    function buttonTextChangeFunc() {
+        if (document.getElementById('myButton').innerHTML === "Open Window") {
+            document.getElementById('myButton').innerHTML = "Close Window";
+        }
+        else  {
+            document.getElementById('myButton').innerHTML = "Open Window";
+        }
+
+    }
+    
+ </script>
+
+<script>
+
+    var myObject = new Vue({
+        el: '#app',
+        data: {
+            tempval: @ViewData.Model.TempVal;
+            @*desiredTemp: @app.desiredTemp;*@
+        }
+    })
+</script>
